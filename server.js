@@ -3,7 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, doc, setDoc, serverTimestamp } from "firebase/firestore";
 
 const app = express();
-const PORT = process.env.PORT || 3000; // Render asigna el puerto automáticamente
+const PORT = process.env.PORT || 10000; // Render asigna el puerto automáticamente
 
 // 1. Configura tus credenciales de Firebase Web aquí
 const firebaseConfig = {
