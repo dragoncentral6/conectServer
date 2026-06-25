@@ -28,19 +28,21 @@ app.get('/', (req, res) => {
     res.send('🚀 Servidor de Grúas Corriendo en Render');
 });
 
-// 2. Ruta exacta donde Traccar Client enviará los datos
+// 2. Ruta exacta optimizada para Traccar Client nativo
 app.get('/api/posicion', async (req, res) => {
     try {
-        // Traccar Client envía los datos como parámetros Query en la URL
+        // Traccar Client envía de forma nativa: id, lat, lon, speed, bearing
         const { id, lat, lon, speed, bearing } = req.query;
 
+        // Si la app aún no envía datos, respondemos OK para que no falle la conexión
         if (!id || !lat || !lon) {
-            return res.status(400).send('Faltan parámetros obligatorios (id, lat, lon)');
+            console.log("📡 Conexión recibida de Traccar, esperando datos de ubicación...");
+            return res.status(200).send('OK'); 
         }
 
         console.log(`📡 Datos recibidos de la Grúa ID: ${id} -> Lat: ${lat}, Lng: ${lon}`);
 
-        // 3. Guardar directamente en Firestore en la colección 'gruas'
+        // Guardar en Firestore
         await setDoc(doc(db, "gruas", id), {
             lat: parseFloat(lat),
             lng: parseFloat(lon),
@@ -49,13 +51,13 @@ app.get('/api/posicion', async (req, res) => {
             ultimaActualizacion: serverTimestamp()
         }, { merge: true });
 
-        // Responderle OK a la app Traccar
         res.status(200).send('OK');
     } catch (error) {
         console.error('Error al procesar la ubicación:', error);
         res.status(500).send('Error interno del servidor');
     }
 });
+
 
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en el puerto ${PORT}`);
