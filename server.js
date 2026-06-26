@@ -26,6 +26,7 @@ app.use(express.urlencoded({ extended: true }));
 // Ruta de prueba para verificar que el servidor está vivo
 app.get('/', (req, res) => {
     res.send('🚀 Servidor de Grúas Corriendo en Render');
+    console.log(req.body);
 });
 
 // 2. Ruta exacta corregida para recibir POST de Traccar Client
