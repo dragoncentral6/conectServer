@@ -28,22 +28,22 @@ app.get('/', (req, res) => {
     res.send('🚀 Servidor de Grúas Corriendo en Render');
 });
 
-// 2. Ruta exacta optimizada para Traccar Client nativo
-app.get('/api/posicion', async (req, res) => {
+// 2. Ruta exacta corregida para recibir POST de Traccar Client
+app.post('/api/posicion', async (req, res) => {
     try {
-        // Traccar Client envía de forma nativa: id, lat, lon, speed, bearing
-        const { id, lat, lon, speed, bearing } = req.query;
+        // Traccar Client envía los datos en el cuerpo (body) mediante JSON
+        const { id, lat, lon, speed, bearing } = req.body;
 
-        // Si la app aún no envía datos, respondemos OK para que no falle la conexión
+        // Validación de datos obligatorios
         if (!id || !lat || !lon) {
-            console.log("📡 Conexión recibida de Traccar, esperando datos de ubicación...");
-            return res.status(200).send('OK'); 
+            console.log("📡 Petición POST vacía o incompleta recibida de Traccar.");
+            return res.status(400).send('Faltan datos de ubicación (id, lat, lon)'); 
         }
 
-        console.log(`📡 Datos recibidos de la Grúa ID: ${id} -> Lat: ${lat}, Lng: ${lon}`);
+        console.log(`📡 Datos guardados -> Grúa ID: ${id} | Lat: ${lat} | Lng: ${lon}`);
 
-        // Guardar en Firestore
-        await setDoc(doc(db, "gruas", id), {
+        // Guardar o actualizar en Firestore
+        await setDoc(doc(db, "gruas", String(id)), {
             lat: parseFloat(lat),
             lng: parseFloat(lon),
             velocidad: parseFloat(speed || 0),
@@ -51,6 +51,7 @@ app.get('/api/posicion', async (req, res) => {
             ultimaActualizacion: serverTimestamp()
         }, { merge: true });
 
+        // Traccar Client espera un código 200 OK para confirmar la recepción
         res.status(200).send('OK');
     } catch (error) {
         console.error('Error al procesar la ubicación:', error);
@@ -59,6 +60,6 @@ app.get('/api/posicion', async (req, res) => {
 });
 
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
