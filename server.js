@@ -29,36 +29,51 @@ app.get('/', (req, res) => {
     console.log(req.body);
 });
 
-// 2. Ruta exacta corregida para recibir POST de Traccar Client
+// 2. Ruta adaptada al formato real de tus logs (Transistor Background Geolocation)
 app.post('/api/posicion', async (req, res) => {
     try {
-        // Traccar Client envía los datos en el cuerpo (body) mediante JSON
-        const { id, lat, lon, speed, bearing } = req.body;
+        console.log("📦 Cuerpo recibido en el servidor:", JSON.stringify(req.body));
 
-        // Validación de datos obligatorios
-        if (!id || !lat || !lon) {
-            console.log("📡 Petición POST vacía o incompleta recibida de Traccar.");
-            return res.status(400).send('Faltan datos de ubicación (id, lat, lon)'); 
+        // Transistor Software envía la información dentro del objeto 'location'
+        const locationData = req.body.location || req.body;
+        
+        // Extraer los datos según la estructura real de esa librería
+        // Nota: Esta librería usa 'uuid' o 'device_id' para identificar el teléfono
+        const id = req.body.id || locationData.uuid || "dispositivo_desconocido";
+        
+        // Las coordenadas vienen dentro de un sub-objeto 'coords'
+        const coords = locationData.coords || {};
+        const lat = coords.latitude;
+        const lon = coords.longitude;
+        const speed = coords.speed || 0;
+        const bearing = coords.heading || 0; // Se suele llamar heading en este plugin
+
+        // Validación adaptada
+        if (!lat || !lon) {
+            console.log("📡 Petición POST recibida, pero no se encontraron coordenadas válidas.");
+            // Esta librería exige un código 200 o 201 para saber que el servidor respondió con éxito
+            return res.status(200).send({ success: false, message: "Faltan coordenadas" }); 
         }
 
-        console.log(`📡 Datos guardados -> Grúa ID: ${id} | Lat: ${lat} | Lng: ${lon}`);
+        console.log(`📡 Datos procesados -> ID: ${id} | Lat: ${lat} | Lng: ${lon}`);
 
         // Guardar o actualizar en Firestore
         await setDoc(doc(db, "gruas", String(id)), {
             lat: parseFloat(lat),
             lng: parseFloat(lon),
-            velocidad: parseFloat(speed || 0),
-            orientacion: parseFloat(bearing || 0),
+            velocidad: parseFloat(speed),
+            orientacion: parseFloat(bearing),
             ultimaActualizacion: serverTimestamp()
         }, { merge: true });
 
-        // Traccar Client espera un código 200 OK para confirmar la recepción
-        res.status(200).send('OK');
+        // Responder con un formato JSON de éxito (muchas librerías lo exigen para limpiar su caché local)
+        res.status(200).json({ success: true });
     } catch (error) {
         console.error('Error al procesar la ubicación:', error);
         res.status(500).send('Error interno del servidor');
     }
 });
+
 
 
 app.listen(PORT, '0.0.0.0', () => {
