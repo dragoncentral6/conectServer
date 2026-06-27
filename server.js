@@ -32,21 +32,18 @@ app.get('/', (req, res) => {
 // 2. Ruta adaptada al formato real de tus logs (Transistor Background Geolocation)
 app.post('/api/posicion', async (req, res) => {
     try {
-        console.log("📦 Cuerpo recibido en el servidor:", JSON.stringify(req.body));
+        // Traccar Client envía los datos en la raíz del body (req.body) o en la URL (req.query)
+        // Usamos esto para que soporte tanto envíos POST (Body) como GET (Query)
+        const datos = (Object.keys(req.body).length > 0) ? req.body : req.query;
 
-        // Transistor Software envía la información dentro del objeto 'location'
-        const locationData = req.body.location || req.body;
-        
-        // Extraer los datos según la estructura real de esa librería
-        // Nota: Esta librería usa 'uuid' o 'device_id' para identificar el teléfono
-        const id = req.body.id || locationData.uuid || "dispositivo_desconocido";
-        
-        // Las coordenadas vienen dentro de un sub-objeto 'coords'
-        const coords = locationData.coords || {};
-        const lat = coords.latitude;
-        const lon = coords.longitude;
-        const speed = coords.speed || 0;
-        const bearing = coords.heading || 0; // Se suele llamar heading en este plugin
+        console.log("📦 Datos recibidos en el servidor:", JSON.stringify(datos));
+
+        // Traccar usa exactamente las variables: id, lat, lon, speed, bearing
+        const id = datos.id || "dispositivo_desconocido";
+        const lat = datos.lat;
+        const lon = datos.lon;
+        const speed = datos.speed || 0;
+        const bearing = datos.bearing || 0;
 
         // Validación adaptada
         if (!lat || !lon) {
@@ -74,6 +71,8 @@ app.post('/api/posicion', async (req, res) => {
     }
 });
 
+// Habilitamos también app.get en la misma ruta por si configuras Traccar Client en modo GET
+app.get('/api/posicion', app.post('/api/posicion'));
 
 
 app.listen(PORT, '0.0.0.0', () => {
