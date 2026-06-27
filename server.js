@@ -30,7 +30,7 @@ app.get('/', (req, res) => {
 });
 
 // 2. Ruta adaptada al formato real de tus logs (Transistor Background Geolocation)
-app.post('/api/posicion', async (req, res) => {
+app.get('/api/posicion', async (req, res) => {
     try {
         console.log("📦 Cuerpo recibido en el servidor:", JSON.stringify(req.body));
 
