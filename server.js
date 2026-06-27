@@ -30,13 +30,13 @@ app.get('/', (req, res) => {
 });
 
 // 2. Ruta adaptada al formato real de tus logs (Transistor Background Geolocation)
-app.post('/api/posicion', async (req, res) => {
+app.get('/api/posicion', async (req, res) => {
     try {
         // Traccar Client envía los datos en la raíz del body (req.body) o en la URL (req.query)
         // Usamos esto para que soporte tanto envíos POST (Body) como GET (Query)
         const datos = (Object.keys(req.body).length > 0) ? req.body : req.query;
 
-        console.log("📦 Datos recibidos en el servidor:", JSON.stringify(datos));
+        console.log("📦 GET Datos recibidos en el servidor:", JSON.stringify(datos));
 
         // Traccar usa exactamente las variables: id, lat, lon, speed, bearing
         const id = datos.id || "dispositivo_desconocido";
