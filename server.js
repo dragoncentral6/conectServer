@@ -37,8 +37,8 @@ const procesarUbicacion = async (req, res) => {
         console.log("📦 Datos recibidos en el servidor:", JSON.stringify(datos));
 
         const id = datos.id || "dispositivo_desconocido";
-        const lat = datos.lat;
-        const lon = datos.lon;
+        const lat = datos.latitude;
+        const lon = datos.longitude;
         const speed = datos.speed || 0;
         const bearing = datos.bearing || 0;
 
