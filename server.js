@@ -36,11 +36,32 @@ const procesarUbicacion = async (req, res) => {
 
         console.log("📦 Datos recibidos en el servidor:", JSON.stringify(datos));
 
+      /*
         const id = datos.id || "dispositivo_desconocido";
         const lat = datos.latitude;
         const lon = datos.longitude;
         const speed = datos.speed || 0;
         const bearing = datos.bearing || 0;
+        */
+
+      // Detectar si los datos vienen del formato nuevo (objeto location) o del formato plano
+      const esFormatoNuevo = req.body.location && req.body.location.coords;
+      const datosBase = esFormatoNuevo ? req.body.location.coords : (Object.keys(req.body).length > 0 ? req.body : req.query);
+      
+      // Extraer el ID del dispositivo (puede venir en device_id o id)
+      const id = req.body.device_id || datosBase.id || "dispositivo_desconocido";
+      
+      // Extraer las coordenadas y datos según el formato que llegue
+      const lat = datosBase.latitude || datosBase.lat;
+      const lon = datosBase.longitude || datosBase.lon;
+      
+      // Extraer el rumbo (heading en formato nuevo, bearing en formato viejo)
+      // Si es -1 (inválido), lo guardamos como 0
+      const headingVal = datosBase.heading !== undefined ? datosBase.heading : (datosBase.bearing || 0);
+      const bearing = headingVal === -1 ? 0 : headingVal;
+      
+      const speed = datosBase.speed && datosBase.speed > 0 ? datosBase.speed : 0;
+  
 
         if (!lat || !lon) {
             console.log("📡 Petición recibida, pero faltan coordenadas válidas.");
