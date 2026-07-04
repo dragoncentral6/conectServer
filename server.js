@@ -71,7 +71,7 @@ const procesarUbicacion = async (req, res) => {
         console.log(`📡 Datos procesados -> ID: ${id} | Lat: ${lat} | Lng: ${lon}`);
 
         // Guardar en Firestore
-        await setDoc(doc(db, "gruas", String(id)), {
+        await setDoc(doc(db, "dispositivos_gps", String(id)), {
             lat: parseFloat(lat),
             lng: parseFloat(lon),
             velocidad: parseFloat(speed),
