@@ -49,17 +49,16 @@ const procesarUbicacion = async (req, res) => {
       const datosBase = esFormatoNuevo ? req.body.location.coords : (Object.keys(req.body).length > 0 ? req.body : req.query);
       
       // Extraer el ID del dispositivo (puede venir en device_id o id)
-      const id = req.body.device_id || datosBase._id || "dispositivo_desconocido";
-
-      console.log("linea 54: ", id);
-
-      if (datosBase.topic) {
-          // Rompe el texto "owntracks/juan/motorola" por las barras "/"
-          const partes = datosBase.topic.split('/'); 
-          // Toma la última parte, que en este caso sería "motorola"
-          //id = partes[partes.length - 1];
-          console.log(partes[2]);
-      }
+      let id = req.body.device_id || datosBase._id || "dispositivo_desconocido";
+      
+      const topic = datos.topic || datosBase.topic;
+      if (topic) {
+            const partes = topic.split('/'); 
+            if (partes.length > 0) {
+                // Usamos 'partes.length - 1' para asegurar que siempre tome la última palabra (ej: motorola)
+                id = partes[partes.length - 1]; 
+            }
+        }
       
       // Extraer las coordenadas y datos según el formato que llegue
       const lat = datosBase.latitude || datosBase.lat;
