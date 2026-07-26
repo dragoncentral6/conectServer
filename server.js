@@ -56,8 +56,7 @@ const procesarUbicacion = async (req, res) => {
           const partes = datosBase.topic.split('/'); 
           // Toma la última parte, que en este caso sería "motorola"
           //id = partes[partes.length - 1];
-          id = partes[2];
-          console.log(id);
+          console.log(partes[2]);
       }
       
       // Extraer las coordenadas y datos según el formato que llegue
