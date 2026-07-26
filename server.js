@@ -51,6 +51,8 @@ const procesarUbicacion = async (req, res) => {
       // Extraer el ID del dispositivo (puede venir en device_id o id)
       const id = req.body.device_id || datosBase._id || "dispositivo_desconocido";
 
+      console.log("linea 54: ", id);
+
       if (datosBase.topic) {
           // Rompe el texto "owntracks/juan/motorola" por las barras "/"
           const partes = datosBase.topic.split('/'); 
