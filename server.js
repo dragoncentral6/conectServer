@@ -56,7 +56,7 @@ const procesarUbicacion = async (req, res) => {
             const partes = topic.split('/'); 
             if (partes.length > 0) {
                 // Usamos 'partes.length - 1' para asegurar que siempre tome la última palabra (ej: motorola)
-                id = partes[partes.length - 1]; 
+                id = partes[partes.length - 2]; 
             }
         }
       
