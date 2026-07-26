@@ -55,7 +55,8 @@ const procesarUbicacion = async (req, res) => {
           // Rompe el texto "owntracks/juan/motorola" por las barras "/"
           const partes = datosBase.topic.split('/'); 
           // Toma la última parte, que en este caso sería "motorola"
-          id = partes[partes.length - 1]; 
+          //id = partes[partes.length - 1]; 
+          console.log(partes);
       }
       
       // Extraer las coordenadas y datos según el formato que llegue
