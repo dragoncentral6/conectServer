@@ -7,12 +7,13 @@ const PORT = process.env.PORT || 10000;
 
 // 1. Configura tus credenciales de Firebase usando variables de entorno (Recomendado en Render)
 const firebaseConfig = {
-  apiKey: "AIzaSyAO0AMQhLZBez3wn5KiumIuw44JbROMzoo",
-  authDomain: "ceges-cf8ad.firebaseapp.com",
-  projectId: "ceges-cf8ad",
-  storageBucket: "ceges-cf8ad.firebasestorage.app",
-  messagingSenderId: "673242495179",
-  appId: "1:673242495179:web:177eae4112c792ade4c34e"
+  apiKey: "AIzaSyBzrr9Jc7IY4FSEkZn4_WPuZXiua9Q43fw",
+  authDomain: "controlceges.firebaseapp.com",
+  projectId: "controlceges",
+  storageBucket: "controlceges.firebasestorage.app",
+  messagingSenderId: "523718425904",
+  appId: "1:523718425904:web:ec2bec422522e6b06c5cf5",
+  measurementId: "G-PDVML1F5QH"
 };
 
 // Inicializar Firebase
