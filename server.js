@@ -50,6 +50,13 @@ const procesarUbicacion = async (req, res) => {
       
       // Extraer el ID del dispositivo (puede venir en device_id o id)
       const id = req.body.device_id || datosBase._id || "dispositivo_desconocido";
+
+      if (topic) {
+          // Rompe el texto "owntracks/juan/motorola" por las barras "/"
+          const partes = topic.split('/'); 
+          // Toma la última parte, que en este caso sería "motorola"
+          id = partes[partes.length - 1]; 
+      }
       
       // Extraer las coordenadas y datos según el formato que llegue
       const lat = datosBase.latitude || datosBase.lat;
