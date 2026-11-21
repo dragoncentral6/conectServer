@@ -49,7 +49,8 @@ const procesarUbicacion = async (req, res) => {
       const datosBase = esFormatoNuevo ? req.body.location.coords : (Object.keys(req.body).length > 0 ? req.body : req.query);
       
       // Extraer el ID del dispositivo (puede venir en device_id o id)
-      let id = req.body.device_id || datosBase._id || "dispositivo_desconocido";
+      //let id = req.body.device_id || datosBase._id || "dispositivo_desconocido";
+      let id = req.body.id || datosBase._id || "dispositivo_desconocido";
       
       const topic = datos.topic || datosBase.topic;
       if (topic) {
